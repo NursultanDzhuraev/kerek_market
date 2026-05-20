@@ -28,7 +28,7 @@ allprojects {
 }
 
 dependencies {
-    // add dependencies
+
 }
 
 test {

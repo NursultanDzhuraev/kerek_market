@@ -10,15 +10,19 @@ pluginManagement {
 dependencyResolutionManagement {
     repositories {
         mavenCentral()
+
         ivy {
             name = "Node.js"
             setUrl("https://nodejs.org/dist/")
+
             patternLayout {
                 artifact("v[revision]/[artifact](-v[revision]-[classifier]).[ext]")
             }
+
             metadataSources {
                 artifact()
             }
+
             content {
                 includeModule("org.nodejs", "node")
             }
@@ -27,3 +31,15 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = 'kerek-market'
+
+include 'kerek_market_aos'
+
+def modules = file('modules').listFiles()
+        .findAll { it.isDirectory() }
+
+gradle.ext.appModules = modules
+
+modules.each { dir ->
+    include "modules:${dir.name}"
+    project(":modules:${dir.name}").projectDir = dir
+}
