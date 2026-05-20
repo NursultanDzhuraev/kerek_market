@@ -1,28 +1,33 @@
 pluginManagement {
     repositories {
+        gradlePluginPortal()
         mavenCentral()
+        maven {
+            url = 'https://repository.axelor.com/nexus/repository/maven-public/'
+        }
     }
     plugins {
-        id 'com.axelor.app' version '8.0.0'
+        id 'com.axelor.app' version '8.1.1'
     }
+}
+
+plugins {
+    id 'com.github.node-gradle.node' version '7.1.0' apply false
 }
 
 dependencyResolutionManagement {
     repositories {
         mavenCentral()
-
+        maven {
+            url = 'https://repository.axelor.com/nexus/repository/maven-public/'
+        }
         ivy {
             name = "Node.js"
             setUrl("https://nodejs.org/dist/")
-
             patternLayout {
                 artifact("v[revision]/[artifact](-v[revision]-[classifier]).[ext]")
             }
-
-            metadataSources {
-                artifact()
-            }
-
+            metadataSources { artifact() }
             content {
                 includeModule("org.nodejs", "node")
             }
@@ -32,10 +37,15 @@ dependencyResolutionManagement {
 
 rootProject.name = 'kerek-market'
 
-include 'kerek_market_aos'
-
-def modules = file('modules').listFiles()
-        .findAll { it.isDirectory() }
+def modules = []
+file("modules/axelor-open-suite").traverse(
+        type: groovy.io.FileType.DIRECTORIES,
+        maxDepth: 1
+) { dir ->
+    if (new File(dir, "build.gradle").exists()) {
+        modules.add(dir)
+    }
+}
 
 gradle.ext.appModules = modules
 

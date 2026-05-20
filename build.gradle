@@ -7,13 +7,12 @@ axelor {
 }
 
 allprojects {
-
     group = 'com.axelor'
-    version = '8.1.0'
+    version = '8.1.1'
 
     java {
         toolchain {
-            languageVersion = JavaLanguageVersion.of(21)
+            languageVersion = JavaLanguageVersion.of(23)
         }
     }
 
@@ -28,9 +27,7 @@ allprojects {
 }
 
 dependencies {
-
-}
-
-test {
-    useJUnitPlatform()
+    gradle.appModules.each { dir ->
+        implementation project(":modules:${dir.name}")
+    }
 }
